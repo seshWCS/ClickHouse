@@ -383,13 +383,13 @@ static std::tuple<ASTPtr, BlockIO> executeQueryImpl(
             char input[end - begin + 1];
             char * tmp1 = input;
             memcpy(tmp1, begin, end - begin + 1);
-            char new_begin[5000];
+            char new_begin[max_query_size];
             int res = to_sql(input, new_begin);
             if (res == -1) {
                 throw;
             }
             begin = new_begin;
-            end = new_begin + 4999;
+            end = new_begin + max_query_size - 1;
             
             ParserQuery parser(end, settings.allow_settings_after_format_in_insert);
             ast = parseQuery(parser, begin, end, "", max_query_size, settings.max_parser_depth);
